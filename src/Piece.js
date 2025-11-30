@@ -1,9 +1,10 @@
 import React from 'react';
 
-function Piece({piece}) {
+function Piece({ piece: { type, color } }) {
+  const pieceImg = require(`../public/piece/cburnett/${color}${type.toUpperCase()}.svg`);
   return (
-    <div>
-      {piece.type}
+    <div className="piece-container">
+      <img src={pieceImg} alt="" className="piece" />
     </div>
 );
 }
