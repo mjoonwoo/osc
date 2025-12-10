@@ -11,7 +11,7 @@ function Piece({ piece: { type, color }, position }) {
     }),
   });
 
-  const pieceImg = require(`../public/piece/cburnett/${color}${type.toUpperCase()}.svg`);
+  const pieceImg = require(`../assets/piece/cburnett/${color}${type.toUpperCase()}.svg`);
   
   return (
     <>

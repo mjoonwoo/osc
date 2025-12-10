@@ -6,7 +6,7 @@ import { AnalyzePosition } from './AnalyzePosition';
 
 const futureMoves = {moves: [], index: 0};
 
-const chess = new Chess(promotion);
+const chess = new Chess();
 
 chess.setHeader('Event', 'Chess Analysis');
 
@@ -20,7 +20,6 @@ export function initGame() {
 
 export function handleMove(from, to) {
   const promotions = chess.moves({verbose: true}).filter(m => m.promotion);
-  console.table(promotions);
   if (promotions.some(p => `${p.from}:${p.to}` === `${from}:${to}`)) {
     const pendingPromotion = { from, to , color: promotions[0].color };
     updateGame(pendingPromotion);
@@ -51,9 +50,7 @@ export function move(from, to, promotion) {
 
     futureMoves.moves.push(tempMove);
     futureMoves.index = futureMoves.moves.length;
-    console.log(futureMoves)
     updateGame();
-    // AnalyzePosition(chess.fen());
     return true;
   }
 }
@@ -63,7 +60,6 @@ export function undo() {
   if (undone) {
     futureMoves.index = Math.max(0, futureMoves.index - 1);
     updateGame();
-    console.log(futureMoves);
     return true;
   }
   return false;
@@ -75,7 +71,6 @@ export function redo() {
     chess.move(mv);
     futureMoves.index = Math.min(futureMoves.moves.length, futureMoves.index + 1);
     updateGame();
-    console.log(futureMoves);
     return true;
   }
   return false;
@@ -94,15 +89,17 @@ function updateGame(pendingPromotion) {
   gameSubject.next(baseGame);
 
   AnalyzePosition(chess.fen())
-    .then((analysis) => {
+    .then((data) => {
       gameSubject.next({
         ...baseGame,
-        analysis
-      })
+        analysis: data
+      });
     })
     .catch((err) => {
       console.error('AnalyzePosition failed:', err);
     });
+  
+  AiMove();
 }
 
 function getGameResult() {
@@ -122,4 +119,18 @@ function getGameResult() {
   } else {
     return 'UNKNOWN REASON'
   }
+}
+
+function AiMove() {
+  const data = AnalyzePosition(chess.fen())
+  .then((data) => {
+    if (data.turn === 'w') return;
+    const aiMove = data.move;
+    const from = aiMove.slice(0,2);
+    const to = aiMove.slice(2,4);
+    move(from, to);
+  })
+  .catch((err) => {
+    console.error('AnalyzePosition failed:', err);
+  });
 }

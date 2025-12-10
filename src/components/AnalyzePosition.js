@@ -1,6 +1,7 @@
 import { Chess } from 'chess.js';
 
 export async function AnalyzePosition(fen) {
+  /*
   const apiUrl = 'https://stockfish.online/api/s/v2.php';
   const params = new URLSearchParams();
 
@@ -19,6 +20,16 @@ export async function AnalyzePosition(fen) {
     console.error('Error:', error);
     throw error;
   }
+  */
+
+  const response = await fetch("https://chess-api.com/v1", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ fen: fen }),
+  });
+  return response.json();
 }
 
 export function convertMove(move, board) {

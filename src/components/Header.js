@@ -13,7 +13,7 @@ export function Header({ onTabChange }) {
 			<div className="container-fluid">
 				<span className="navbar-brand mb-0 h1 d-flex align-items-center">
 					<img
-						src={`${process.env.PUBLIC_URL}/logo256_white.png`}
+						src={require(`../assets/logo256_white.png`)}
 						alt="Logo"
 						width="24"
 						height="24"
@@ -35,12 +35,12 @@ export function Header({ onTabChange }) {
 					</li>
 					<li className="nav-item">
 						<button
-							className={`nav-link ${active === 'game' ? 'active' : ''}`}
-							onClick={() => select('game')}
+							className={`nav-link ${active === 'play' ? 'active' : ''}`}
+							onClick={() => select('play')}
 							type="button"
-							aria-current={active === 'game' ? 'page' : undefined}
+							aria-current={active === 'play' ? 'page' : undefined}
 						>
-							Game
+							Play
 						</button>
 					</li>
 				</ul>

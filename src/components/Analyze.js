@@ -20,23 +20,28 @@ function Analyze() {
   });
     return () => subscribe.unsubscribe();
   }, [])
-  
+
   return (
     <div>
       <div className="analysis">
         <p className="horizontal-text">
-          Best Move: {analysis ? convertMove(analysis.bestmove.split(' ')[1], board) : ''}
+          Best Move: {' '}
+          {analysis
+            ? analysis.move
+              ? convertMove(analysis.move, board)
+              : ''
+            : ''}
         </p>
         <p className="horizontal-text">
           Evaluation:{' '}
           {analysis
-            ? analysis.evaluation
-            ? analysis.evaluation
-            : analysis.mate
-            ? analysis.mate > 0
-            ? `M${analysis.mate}`
-            : `-M${-analysis.mate}`
-            : ''
+            ? analysis.mate
+              ? analysis.mate > 0
+                ? `M${analysis.mate}`
+                : `-M${-analysis.mate}`
+              : analysis.eval
+              ? analysis.eval
+              : ''
             : ''}
         </p>
       </div>
@@ -47,7 +52,7 @@ function Analyze() {
         </div>
         {result && <p className="vertical-text">{result}</p>}
       </div>
-      <div>
+      <div className='game-row'>
         <button className="move-button" onClick={undo}>
           {'<'}
         </button>
