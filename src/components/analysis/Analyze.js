@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { gameSubject, initGame } from './Game';
 import Board from './Board';
-import { undo, redo } from './Game';
+import { undo, redo, getFen } from './Game';
 import { convertMove } from '../../hooks/analyzePosition';
 
 function Analyze() {
@@ -16,21 +16,17 @@ function Analyze() {
       setBoard(game.board)
       setIsGameOver(game.isGameOver)
       setResult(game.result)
-      setAnalysis(game.analysis || null)
+      setAnalysis(game.analysis)
   });
     return () => subscribe.unsubscribe();
-  }, [])
+  }, []);
 
   return (
     <div>
       <div className="analysis">
         <p className="horizontal-text">
-          Best Move: {' '}
-          {analysis
-            ? analysis.move
-              ? convertMove(analysis.move, board)
-              : ''
-            : ''}
+          Best Move:{' '}
+          {analysis ? convertMove(analysis.move, board) : 'N/A'}
         </p>
         <p className="horizontal-text">
           Evaluation:{' '}
@@ -40,9 +36,7 @@ function Analyze() {
                 ? `M${analysis.mate}`
                 : `-M${-analysis.mate}`
               : analysis.eval
-              ? analysis.eval
-              : ''
-            : ''}
+            : 'N/A'}
         </p>
       </div>
       <div className="game-row">

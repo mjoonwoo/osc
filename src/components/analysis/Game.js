@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Chess } from 'chess.js';
 import { BehaviorSubject } from 'rxjs';
 import { analyzePosition } from '../../hooks/analyzePosition';
@@ -117,4 +118,8 @@ function getGameResult() {
   } else {
     return 'UNKNOWN REASON'
   }
+}
+
+export function getFen() {
+  return chess.fen();
 }
