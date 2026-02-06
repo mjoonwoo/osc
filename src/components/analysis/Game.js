@@ -7,6 +7,7 @@ import { analyzePosition } from '../../hooks/analyzePosition';
 const futureMoves = {moves: [], index: 0};
 
 const chess = new Chess();
+let analysisRequestId = 0;
 
 chess.setHeader('Event', 'Chess Analysis');
 
@@ -78,6 +79,7 @@ export function redo() {
 
 function updateGame(pendingPromotion) {
   const isGameOver = chess.isGameOver();
+  const turn = chess.turn();
 
   const baseGame = {
     board: chess.board(),
@@ -88,12 +90,24 @@ function updateGame(pendingPromotion) {
 
   gameSubject.next(baseGame);
 
-  analyzePosition(chess.fen())
+  const currentRequestId = ++analysisRequestId;
+  analyzePosition(chess.fen(), 16)
     .then((data) => {
-      gameSubject.next({
-        ...baseGame,
-        analysis: data
-      });
+      if (currentRequestId === analysisRequestId) {
+        const adjusted =
+          turn === 'b' && data
+            ? {
+                ...data,
+                eval: data.eval != null ? -data.eval : data.eval,
+                mate: data.mate != null ? -data.mate : data.mate,
+              }
+            : data;
+        gameSubject.next({
+          ...baseGame,
+          analysis: adjusted
+        });
+      }
+      console.log('analyzePosition data:', data);
     })
     .catch((err) => {
       console.error('analyzePosition failed:', err);

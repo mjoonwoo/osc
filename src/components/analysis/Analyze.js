@@ -26,7 +26,7 @@ function Analyze() {
       <div className="analysis">
         <p className="horizontal-text">
           Best Move:{' '}
-          {analysis ? convertMove(analysis.move, board) : 'N/A'}
+          {analysis ? convertMove(analysis.move, board) : '...'}
         </p>
         <p className="horizontal-text">
           Evaluation:{' '}
@@ -36,15 +36,15 @@ function Analyze() {
                 ? `M${analysis.mate}`
                 : `-M${-analysis.mate}`
               : analysis.eval
-            : 'N/A'}
+            : '...'}
         </p>
       </div>
       <div className="game-row">
-        {isGameOver && <h2 className="vertical-text">GAME OVER</h2>}
+        {isGameOver && <h2 className="vertical-text" style={{fontFamily: "Pretendard", fontWeight: "bold"}}>GAME OVER</h2>}
         <div className="board-container">
           <Board board={board} />
         </div>
-        {result && <p className="vertical-text">{result}</p>}
+        {result && <p className="vertical-text" style={{fontFamily: "Pretendard", fontWeight: "regular"}}>{result}</p>}
       </div>
       <div className='game-row'>
         <button className="move-button" onClick={undo}>

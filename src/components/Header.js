@@ -33,6 +33,16 @@ export function Header({ onTabChange }) {
 							Analysis
 						</button>
 					</li>
+					<li className="nav-item">
+						<button
+							className={`nav-link ${active === 'play' ? 'active' : ''}`}
+							onClick={() => select('play')}
+							type="button"
+							aria-current={active === 'play' ? 'page' : undefined}
+						>
+							Play
+						</button>
+					</li>
 				</ul>
 			</div>
 		</nav>

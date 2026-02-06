@@ -1,6 +1,16 @@
 import { Chess } from 'chess.js';
+import { StockfishEngine } from '../worker/StockfishEngine';
 
-export async function analyzePosition(fen) {
+let engineInstance = null;
+
+function getEngine() {
+  if (!engineInstance) {
+    engineInstance = new StockfishEngine();
+  }
+  return engineInstance;
+}
+
+export async function analyzePosition(fen, depth = 20) {
   /*
   const apiUrl = 'https://stockfish.online/api/s/v2.php';
   const params = new URLSearchParams();
@@ -22,14 +32,13 @@ export async function analyzePosition(fen) {
   }
   */
 
-  const response = await fetch("https://chess-api.com/v1", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ fen: fen }),
-  });
-  return response.json();
+  const engine = getEngine();
+  const result = await engine.analyze(fen, depth);
+  return {
+    move: result.bestmove,
+    eval: result.evaluation,
+    mate: result.mate,
+  };
 }
 
 export function convertMove(move, board) {
